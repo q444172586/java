@@ -22,22 +22,23 @@ public class ThreadFuture {
 	
 	@Test
 	public void js() throws Exception{
-		ExecutorService service = Executors.newFixedThreadPool(3);
-		List<Future<String>> futureList=new ArrayList<Future<String>>();
+		ExecutorService service = Executors.newFixedThreadPool(10);
+		List<Future<Person>> futureList=new ArrayList<Future<Person>>();
 		
-		for (int i = 0; i <10; i++) {
+		for (int i = 0; i <100; i++) {
 			CallableTask task=new CallableTask(i);
 			futureList.add(service.submit(task));//按顺序放
 		}
 		
 		for (int j = 0; j < futureList.size(); j++) {
-			System.out.println("按顺序取结果："+futureList.get(j).get());
+			Person person = futureList.get(j).get();
+			System.out.println("按顺序取结果："+person.getName());
 		}
 		System.out.println("计算结束了！");
 		service.shutdown();
 	}
 	
-	private class CallableTask implements Callable<String>{
+	private class CallableTask implements Callable<Person>{
 		
 		Integer temp;
 		
@@ -45,11 +46,28 @@ public class ThreadFuture {
 			temp=d;
 		}
 		
-		public String call() throws Exception {
+		public Person call() throws Exception {
 			System.out.println("执行第"+temp+"个任务");
 			Thread.sleep(3000);
-			return "第"+temp+"个任务："+Thread.currentThread().getName();
+			Person person = new Person();
+			person.setName("第"+temp+"个任务："+Thread.currentThread().getName());
+			return person;
 		}
+		
+	}
+	
+	private class Person{
+		
+		private String name;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+		
 		
 	}
 
