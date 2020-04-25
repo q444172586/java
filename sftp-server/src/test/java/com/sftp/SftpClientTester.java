@@ -57,6 +57,7 @@ public class SftpClientTester {
     @Test
     public void testMkdir() {
         mkdir("/test/dd/ff/ee");
+        download("/", "ftpserver.vsd", "H:\\Temp\\SftpClient\\download", null);
     }
 
     /**sftp 下载 */
@@ -73,7 +74,7 @@ public class SftpClientTester {
                     baseDir = "";
                 }
                 String src = baseDir + "/" + fileName1;
-                logger.info("开始下载，sftp服务器路径：["+src +"], 目标服务器路径：["+dst+"]");
+                logger.info("开始下载，下载路径：["+src +"], 存储路径：["+dst+"]");
                 sftp.get(src, dst);
                 logger.info("下载成功");
                 return true;
@@ -103,6 +104,7 @@ public class SftpClientTester {
                 if (!isFile) {
                     try {
                         sftp.mkdir(dir);
+                        logger.error("创建文件夹：" + dir);
                         sftp.cd(dir);
                     } catch (SftpException e) {
                         logger.error("当前目录：" + pwd);
